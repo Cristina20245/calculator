@@ -15,9 +15,9 @@ body {
   background-color: #2C3643;
   border-radius: 2px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
-  padding: 5px;
+  padding: 0px;
   width: 300px;
-  min-height: 450px;
+  min-height: 430px;
 
 }
 
@@ -30,11 +30,11 @@ body {
 .display {
   background-color: #1e272e;
   color: white;
-  padding: 12px 15px;
+  padding: 15px;
   border-radius: 5px;
-  margin-bottom: 15px;
+  margin-bottom: 0px;
   text-align: right;
-  min-height: 60px;
+  min-height: 70px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -60,34 +60,41 @@ body {
 
 
 }
+.buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px; /* Espacio entre botones */
+  background-color: #1e272e; /* Línea divisoria */
+
+}
 
 .buttons button {
   padding: 20px;
   font-size: 1.4rem;
-
-  /* border-radius: 50%; */
-  background-color: #2C3643; /* Fondo igual a la calculadora */
-  color: #888; /* Gris claro por defecto */
+  background-color: #2C3643;
+  color: #888;
+  border: none; /* Quitamos bordes */
   cursor: pointer;
   transition: background-color 0.2s ease;
-  border: 1px solid #1e272e;
 }
 
 .buttons button:hover {
   background-color: #3A4654;
 }
 
+/* Colores blancos */
 button.number,
 button.pi,
 button.decimal {
   color: white;
 }
 
+/* C = rojo */
 button.clear {
   color: #ff5252;
 }
 
-
+/* = en rojo */
 button.operation:last-child {
   color: #FF5252;
 }

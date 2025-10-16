@@ -6,6 +6,7 @@ class Calculator {
         this.previousValue = null; // Guarda el valor anterior del display
         this.operator = null; // Guarda el operador actual
         this.waitingForSecondNumber = false; // Indica si se espera el segundo número para realizar la operación
+        this.lastOperation = ''; // Guarda la última operación realizada
         this.updateDisplay(); // Mostramos el valor inicial del display (0)
     }
 
@@ -22,6 +23,8 @@ class Calculator {
             } else {
                 this.operationElement.textContent = `${this.previousValue} ${this.operator} ${this.currentValue}`;
             }
+        } else if (this.lastOperation) {
+            this.operationElement.textContent = this.lastOperation;
         } else {
             // Si no hay operador, mostrar solo el número actual arriba
             this.operationElement.textContent = '';
@@ -88,7 +91,12 @@ class Calculator {
                 return;
         }
 
+        // Guardamos la operación realizada
+        this.lastOperation = `${a} ${this.operator} ${b}`;
+        this.operationElement.textContent = this.lastOperation;
+
         // Si el resultado es un número, se actualiza el display con el resultado
+        this.operationElement.textContent = `${a} ${this.operator} ${b}`;
         this.currentValue = result.toString();
         this.operator = null;
         this.previousValue = null;
@@ -103,6 +111,7 @@ class Calculator {
         this.previousValue = null;
         this.operator = null;
         this.waitingForSecondNumber = false;
+        this.lastOperation = '';
         this.updateDisplay();
     }
 
@@ -165,10 +174,18 @@ class Calculator {
 
         if (isNaN(num)) return;
 
-        const result = (num / 100).toString();
-        this.currentValue = result;
+        // Si hay operador, convierte el porcentaje en base al previousValue
+        if (this.operator && this.previousValue !== null) {
+            const base = parseFloat(this.previousValue);
+            this.currentValue = ((base * num) / 100).toString();
+        } else {
+            // Si no hay operador, convierte el número directamente
+            this.currentValue = (num / 100).toString();
+        }
+
         this.updateDisplay();
     }
+
 
 }
     // Inicialización del display al cargar la página
@@ -189,7 +206,7 @@ document.querySelector('.buttons').addEventListener('click', (e) => {
         calculator.clear();
     } else if (value === '.') {
         calculator.inputDecimal();
-    } else if (['+', '-', 'X', '/', '%'].includes(value)) {
+    } else if (['+', '-', 'X', '/'].includes(value)) {
         calculator.setOperator(value);
     } else if (value === '+/-') {
         calculator.toggleSign();
