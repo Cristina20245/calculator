@@ -1,23 +1,19 @@
 class Calculator {
     constructor(displayElement, operationElement) {
-        this.displayElement = displayElement; // Guarda el elemento que representa el display
-        this.operationElement = operationElement; // Guarda el elemento que representa el display
-        this.currentValue ='0'; // Guarda el valor actual del display
-        this.previousValue = null; // Guarda el valor anterior del display
-        this.operator = null; // Guarda el operador actual
-        this.waitingForSecondNumber = false; // Indica si se espera el segundo número para realizar la operación
-        this.lastOperation = ''; // Guarda la última operación realizada
-        this.updateDisplay(); // Mostramos el valor inicial del display (0)
+        this.displayElement = displayElement;
+        this.operationElement = operationElement;
+        this.currentValue = '0';
+        this.previousValue = null;
+        this.operator = null;
+        this.waitingForSecondNumber = false;
+        this.lastOperation = ''; // Última operación mostrada arriba del display
+        this.updateDisplay();
     }
 
-    // Métodos para manipular el display
     updateDisplay() {
-        // Mostrar valor principal en el display
-        this.displayElement.textContent = this.currentValue;
+        this.displayElement.textContent = this.formatNumber(this.currentValue);
 
-        // Mostrar operación arriba si existe
         if (this.operator && this.previousValue !== null) {
-            // Si aún no se ha escrito el segundo número, no mostrarlo
             if (this.waitingForSecondNumber || this.currentValue === '0') {
                 this.operationElement.textContent = `${this.previousValue} ${this.operator}`;
             } else {
@@ -26,35 +22,23 @@ class Calculator {
         } else if (this.lastOperation) {
             this.operationElement.textContent = this.lastOperation;
         } else {
-            // Si no hay operador, mostrar solo el número actual arriba
             this.operationElement.textContent = '';
         }
     }
 
-
-
-    // Metodo que se ejecuta cuando se pulsa el botón numérico (0-9)
     inputDigit(digit) {
-        // si estamos esperando for el segundo numero, se agrega el digito pulsado al valor actual
         if (this.waitingForSecondNumber) {
             this.currentValue = digit;
             this.waitingForSecondNumber = false;
-        }
-
-        // Si currentValue es pi (o resultado de pi), interpretamos pi * digit
-        else if (this.currentValue === Math.PI.toFixed(6)) {
+        } else if (this.currentValue === Math.PI.toFixed(6)) {
             const result = (parseFloat(this.currentValue) * parseFloat(digit)).toFixed(6);
             this.currentValue = result;
-        }
-
-        else if (this.currentValue === '0') { // Si el valor actual es 0, se reemplaza por el digito pulsado
+        } else if (this.currentValue === '0') {
             this.currentValue = digit;
-        }
-        else { // Si el valor actual no es 0, se agrega el digito pulsado al valor actual
+        } else {
             this.currentValue += digit;
         }
 
-        // Se actualiza el display con el valor actual
         this.updateDisplay();
     }
 
@@ -66,19 +50,13 @@ class Calculator {
         let result = 0;
 
         switch (this.operator) {
-            case '+':
-                result = a + b;
-                break;
-            case '-':
-                result = a - b;
-                break;
+            case '+': result = a + b; break;
+            case '-': result = a - b; break;
             case 'X':
-            case '*':
-                result = a * b;
-                break;
+            case '*': result = a * b; break;
             case '/':
             case '÷':
-                if ( b === 0 ) {
+                if (b === 0) {
                     this.currentValue = 'error';
                     this.updateDisplay();
                     this.operator = null;
@@ -87,25 +65,17 @@ class Calculator {
                 }
                 result = a / b;
                 break;
-            default:
-                return;
+            default: return;
         }
 
-        // Guardamos la operación realizada
         this.lastOperation = `${a} ${this.operator} ${b}`;
-        this.operationElement.textContent = this.lastOperation;
-
-        // Si el resultado es un número, se actualiza el display con el resultado
-        this.operationElement.textContent = `${a} ${this.operator} ${b}`;
         this.currentValue = result.toString();
         this.operator = null;
         this.previousValue = null;
         this.waitingForSecondNumber = true;
         this.updateDisplay();
-
     }
 
-    // Método que borra el contenido del display
     clear() {
         this.currentValue = '0';
         this.previousValue = null;
@@ -115,14 +85,11 @@ class Calculator {
         this.updateDisplay();
     }
 
-    // Método que agrega el punto decimal si no hay uno ya
     inputDecimal() {
         if (this.waitingForSecondNumber) {
             this.currentValue = '0.';
             this.waitingForSecondNumber = false;
-        }
-        // Añadir el decimal solo si no existe
-        else if (!this.currentValue.includes('.')) {
+        } else if (!this.currentValue.includes('.')) {
             this.currentValue += '.';
         }
 
@@ -131,30 +98,29 @@ class Calculator {
 
     setOperator(op) {
         if (this.operator && !this.waitingForSecondNumber) {
-    this.calculate();
-    } // Si ya hay una operación en curso, se ejecuta la operación
+            this.calculate();
+        }
 
-        this.previousValue = this.currentValue; // Guarda el valor anterior del display
-        this.operator = op; // Guarda el operador actual
-        this.currentValue = '0'; // Resetea el display para ingresas el segundo número
-        this.updateDisplay(); // Actualiza el display con el valor anterior
+        this.previousValue = this.currentValue;
+        this.operator = op;
+        this.currentValue = '0';
+        this.updateDisplay();
     }
 
     toggleSign() {
-        // No hacemos nada si el valor es 0 o error
         if (this.currentValue === '0' || this.currentValue === 'error') return;
 
-        // Si empieza con "-", se quita el signo
         if (this.currentValue.startsWith('-')) {
             this.currentValue = this.currentValue.slice(1);
         } else {
             this.currentValue = '-' + this.currentValue;
         }
+
         this.updateDisplay();
     }
 
     insertPi() {
-        const piValue = Math.PI.toFixed(6); // Resultado: 3,141593
+        const piValue = Math.PI.toFixed(6);
 
         if (this.waitingForSecondNumber) {
             this.currentValue = piValue;
@@ -166,34 +132,39 @@ class Calculator {
             const result = (num * Math.PI).toFixed(6);
             this.currentValue = result;
         }
+
         this.updateDisplay();
     }
 
     percentage() {
         const num = parseFloat(this.currentValue);
-
         if (isNaN(num)) return;
 
-        // Si hay operador, convierte el porcentaje en base al previousValue
         if (this.operator && this.previousValue !== null) {
             const base = parseFloat(this.previousValue);
             this.currentValue = ((base * num) / 100).toString();
         } else {
-            // Si no hay operador, convierte el número directamente
             this.currentValue = (num / 100).toString();
         }
 
         this.updateDisplay();
     }
 
-
+    // Redondea a 8 decimales y elimina ceros finales innecesarios
+    formatNumber(value) {
+        const num = parseFloat(value);
+        if (isNaN(num)) return value;
+        if (Number.isInteger(num)) return num.toString();
+        return num.toFixed(8).replace(/\.?0+$/, '');
+    }
 }
-    // Inicialización del display al cargar la página
+
+// Inicialización del display al cargar la página
 const displayEl = document.querySelector('.display .number');
 const operationEl = document.querySelector('.display .operation');
 const calculator = new Calculator(displayEl, operationEl);
 
-// Delegación de clics en los botones
+// Delegación de clics
 document.querySelector('.buttons').addEventListener('click', (e) => {
     const btn = e.target.closest('button');
     if (!btn) return;
@@ -217,7 +188,27 @@ document.querySelector('.buttons').addEventListener('click', (e) => {
     } else if (value === '=') {
         calculator.calculate();
     }
-
-
 });
 
+// Soporte para teclado
+document.addEventListener('keydown', (e) => {
+    const key = e.key;
+
+    if (!isNaN(key)) {
+        calculator.inputDigit(key);
+    } else if (key === '.' || key === ',') {
+        calculator.inputDecimal();
+    } else if (key === '+' || key === '-' || key === '*' || key === '/') {
+        calculator.setOperator(key === '*' ? 'X' : key);
+    } else if (key === 'Enter' || key === '=') {
+        calculator.calculate();
+    } else if (key === '%') {
+        calculator.percentage();
+    } else if (key === 'Escape') {
+        calculator.clear();
+    } else if (key === 'p' || key === 'π') {
+        calculator.insertPi();
+    } else if (key === 'n') {
+        calculator.toggleSign();
+    }
+});

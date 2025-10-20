@@ -1,7 +1,6 @@
+/* Fondo general con gradiente y centrado del contenido */
 body {
-
   background-image: linear-gradient(120deg,#7b89d1, #8cdbd3);
-
   color: #222;
   height: 100vh;
   margin: 0;
@@ -11,6 +10,7 @@ body {
   font-family: 'Roboto', sans-serif;
 }
 
+/* Contenedor principal de la calculadora */
 .calculator {
   background-color: #2C3643;
   border-radius: 2px;
@@ -18,15 +18,16 @@ body {
   padding: 0px;
   width: 300px;
   min-height: 430px;
-
 }
 
+/* Centrado del contenedor */
 .container {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
+/* Display principal donde se muestra el resultado y operación */
 .display {
   background-color: #1e272e;
   color: white;
@@ -38,63 +39,59 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-
 }
 
+/* Línea superior con la operación previa */
 .display .operation {
   font-size: 1rem;
   color: #888;
   margin-bottom: 10px;
 }
 
+/* Número principal en el display */
 .display .number {
   font-size: 2rem;
   font-weight: 300;
   word-wrap: break-word;
 }
 
+/* Grid de botones */
 .buttons {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 0px;
-
-
-}
-.buttons {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1px; /* Espacio entre botones */
-  background-color: #1e272e; /* Línea divisoria */
-
+  gap: 1px; /* Separación entre botones */
+  background-color: #1e272e; /* Color de fondo para simular líneas divisorias */
 }
 
+/* Estilo general de los botones */
 .buttons button {
   padding: 20px;
   font-size: 1.4rem;
   background-color: #2C3643;
   color: #888;
-  border: none; /* Quitamos bordes */
+  border: none;
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
 
+/* Efecto hover */
 .buttons button:hover {
   background-color: #3A4654;
 }
 
-/* Colores blancos */
+/* Botones numéricos y especiales en blanco */
 button.number,
 button.pi,
 button.decimal {
   color: white;
 }
 
-/* C = rojo */
+/* Botón C (clear) en rojo */
 button.clear {
   color: #ff5252;
 }
 
-/* = en rojo */
+/* Botón = (última operación) en rojo */
 button.operation:last-child {
   color: #FF5252;
 }
